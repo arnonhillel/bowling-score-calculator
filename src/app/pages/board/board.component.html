@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="input-container">
+        <h1 class="header">
+            WELCOME: {{userName || 'Anonymous'}}
+        </h1>
+    </div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th *ngFor="let item of board.frames">{{item.frame_number}} </th>
+                </tr>
+            </thead>
+            <tbody>
+                <td *ngFor="let item of board.frames; let i = index">
+                    <form class="example-form" [ngClass]="{ highlight: currentFrame == i}">
+                        <div class="first-hit">
+                            <mat-label>---</mat-label>
+                            <mat-select (selectionChange)="onHitChange(i,'first_hit', $event.value)" [disabled]="currentFrame != i">
+                                <mat-option [value]="0">
+                                    0
+                                </mat-option>
+                                <mat-option *ngFor="let a of totalPins(); let i = index" [value]="i+1">
+                                    {{i+1}}
+                                </mat-option>
+                            </mat-select>
+                            
+                        </div>
+                        <div class="second-hit">
+                            <mat-label>---</mat-label>
+                            <mat-select (selectionChange)="onHitChange(i,'second_hit', $event.value)" [disabled]="!item.first_hit || currentFrame != i">
+                                <mat-option [value]="0">
+                                    0
+                                </mat-option>
+                                <mat-option *ngFor="let a of totalPins(); let i = index"
+                                    [value]="i+1" [disabled]="i>=(item.maxPoints)">
+                                    {{i+1}}
+                                </mat-option>
+                            </mat-select>
+                            
+                        </div>
+                        <div class="frame-total">
+                            <span class="number">
+                                {{item.total_frame_score}}
+                            </span>
+                        </div>
+                    </form>
+
+                </td>
+            </tbody>
+        </table>
+        <div class="total-scroe" style="">
+         <h1 class="total-scroe-header">
+             TOTAL SCORE:  {{board.totalScore}}
+         </h1>
+        </div>
+    </div>
+
+
+</div>
