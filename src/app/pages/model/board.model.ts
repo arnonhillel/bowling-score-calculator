@@ -7,7 +7,7 @@ export class BoardModel {
     public totalScore: number = 0;
     constructor() {
         for (let i = 1; i < 11; i++) {
-            const frame = new FrameModel(0, 0, 0, 0, i, 10)
+            const frame = new FrameModel(-1, -1, 0, 0, i, 10)
             this.frames.push(frame)
         }
     }

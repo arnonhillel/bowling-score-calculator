@@ -16,19 +16,18 @@
                     <form class="example-form" [ngClass]="{ highlight: currentFrame == i}">
                         <div class="first-hit">
                             <mat-label>---</mat-label>
-                            <mat-select (selectionChange)="onHitChange(i,'first_hit', $event.value)" [disabled]="currentFrame != i">
+                            <mat-select (selectionChange)="onHitChange(i,'first_hit', $event.value)" [disabled]="currentFrame != i" *ngIf="!item.isSpare() && !item.isStrike()">
                                 <mat-option [value]="0">
                                     0
                                 </mat-option>
                                 <mat-option *ngFor="let a of totalPins(); let i = index" [value]="i+1">
                                     {{i+1}}
                                 </mat-option>
-                            </mat-select>
-                            
+                            </mat-select>    
                         </div>
                         <div class="second-hit">
                             <mat-label>---</mat-label>
-                            <mat-select (selectionChange)="onHitChange(i,'second_hit', $event.value)" [disabled]="!item.first_hit || currentFrame != i">
+                            <mat-select (selectionChange)="onHitChange(i,'second_hit', $event.value)" [disabled]="item.first_hit < 0 || currentFrame != i" *ngIf="!item.isSpare() && !item.isStrike()">
                                 <mat-option [value]="0">
                                     0
                                 </mat-option>
@@ -37,7 +36,12 @@
                                     {{i+1}}
                                 </mat-option>
                             </mat-select>
-                            
+                            <div *ngIf="item.isSpare()">
+                                X
+                            </div>    
+                            <div *ngIf="item.isStrike()">
+                                /
+                            </div>    
                         </div>
                         <div class="frame-total">
                             <span class="number">

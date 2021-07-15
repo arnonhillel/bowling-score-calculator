@@ -38,51 +38,49 @@ export class PagesService {
 
 
   public onHitChange(frameNumber: number, action: string, value) {
-    this.initialBoard.frames[frameNumber][action] = parseInt(value)
-    this.initialBoard.frames[frameNumber].maxPoints = 10 - parseInt(value)
+    this.initialBoard.frames[frameNumber].setTotalScore(action , parseInt(value))
+    
+    this.initialBoard.frames[frameNumber].maxPoints -= parseInt(value)
     // check spare and strike if yes update board
 
     switch (action) {
       case 'first_hit':
-        this.afterFirstHit(frameNumber,value);
+        this.afterFirstHit(frameNumber,value, this.initialBoard.frames[frameNumber].maxPoints);
         break;
       case 'second_hit':
-        this.afterSecondHit(frameNumber,value);
+        this.afterSecondHit(frameNumber,value, this.initialBoard.frames[frameNumber].maxPoints);
         break;
       default:
         break;
     }
+    this.updateTotalScore()
 
-    this.setTotalFrameScore(this.initialBoard.frames[frameNumber])
-    this.updateTotalScore(this.initialBoard)
-    //update total score
-    // 
-    // if (frameNumber > 0) {
-    // } else {
-    //   this.setTotalScore(this.initialBoard.frames[frameNumber], 0)
-    // }
   }
 
 
-  public afterFirstHit(frameNumber: number, value){
+  public afterFirstHit(frameNumber: number, value, maxPoints){
+    if(maxPoints <= 0){ // strike
+      
+      this.initialBoard.hasStrike = true;
+      this.setCurrentFrame(frameNumber+1)
+    }
     
   }
 
-  public afterSecondHit(frameNumber: number, value){
+  public afterSecondHit(frameNumber: number, value, maxPoints){
+    if(maxPoints == 0){ //spare
+      this.initialBoard.hasSpare = false;
+    }
     this.setCurrentFrame(frameNumber+1)
   }
 
 
-  public updateTotalScore(board: BoardModel) {
-    board.setTotalScore()
-
-    this.setBoard(board)
+  public updateTotalScore() {
+    this.initialBoard.setTotalScore()
+    this.setBoard(this.initialBoard)
   }
 
-  public setTotalFrameScore(frame: FrameModel) {
-    frame.setTotalScore()
-  }
-
+  
 
   public grantBonus() {
 
