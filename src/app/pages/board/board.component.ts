@@ -55,4 +55,9 @@ export class BoardComponent implements OnInit {
     }
     return sum;
   }
+
+
+  public resetBoard(){
+    this.pagesService.setBoard(new BoardModel())
+  }
 }

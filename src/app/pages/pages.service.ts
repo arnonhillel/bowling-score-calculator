@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BoardModel, } from './model/board.model';
-import { FrameModel } from './model/frame.model';
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +71,6 @@ export class PagesService {
       }
     }
     if (maxPoints == 0) { // strike   
-      this.initialBoard.hasStrike = true;
       this.setCurrentFrame(frameNumber + 1)
     }
 
@@ -84,9 +82,7 @@ export class PagesService {
       this.initialBoard.frames[frameNumber - 1].setBonusScore(value + this.firstHitBonus)
       this.resetStrikeBonus()
     }
-    if (maxPoints == 0) { //spare
-      this.initialBoard.hasSpare = true;
-    }
+   
     this.setCurrentFrame(frameNumber + 1)
     this.setPrevFrame(frameNumber)
     this.updateTotalScore()
