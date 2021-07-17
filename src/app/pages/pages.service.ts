@@ -38,15 +38,16 @@ export class PagesService {
 
 
   public onHitChange(frameNumber: number, action: string, value) {
-    this.initialBoard.frames[frameNumber].setTotalFrameScore(action, parseInt(value))
+    let current = this.board.value.frames[frameNumber]
+    current.setTotalFrameScore(action, parseInt(value))
 
-    this.initialBoard.frames[frameNumber].maxPoints -= parseInt(value)
+    current.maxPoints -= parseInt(value)
     switch (action) {
       case 'first_hit':
-        this.afterFirstHit(frameNumber, value, this.initialBoard.frames[frameNumber].maxPoints);
+        this.afterFirstHit(frameNumber, value, current.maxPoints);
         break;
       case 'second_hit':
-        this.afterSecondHit(frameNumber, value, this.initialBoard.frames[frameNumber].maxPoints);
+        this.afterSecondHit(frameNumber, value, current.maxPoints);
         break;
       default:
         break;
@@ -57,8 +58,8 @@ export class PagesService {
 
 
   public afterFirstHit(frameNumber: number, value, maxPoints) {
-    let prevFrame = this.initialBoard.frames[frameNumber - 1]
-    if (frameNumber > 0 && this.initialBoard.frames[frameNumber - 1].isSpare()) {
+    let prevFrame = this.board.value.frames[frameNumber - 1]
+    if (frameNumber > 0 && this.board.value.frames[frameNumber - 1].isSpare()) {
       prevFrame.setBonusScore(value + this.firstHitBonus)
     }
     if (frameNumber > 0 && prevFrame.isStrike()) {
@@ -78,8 +79,8 @@ export class PagesService {
 
 
   public afterSecondHit(frameNumber: number, value, maxPoints) {
-    if (frameNumber > 0 && this.initialBoard.frames[frameNumber - 1].isStrike()) {
-      this.initialBoard.frames[frameNumber - 1].setBonusScore(value + this.firstHitBonus)
+    if (frameNumber > 0 && this.board.value.frames[frameNumber - 1].isStrike()) {
+      this.board.value.frames[frameNumber - 1].setBonusScore(value + this.firstHitBonus)
       this.resetStrikeBonus()
     }
    
@@ -90,8 +91,8 @@ export class PagesService {
 
 
   public updateTotalScore() {
-    this.initialBoard.setTotalBoardScore()
-    this.setBoard(this.initialBoard)
+    this.board.value.setTotalBoardScore()
+    this.setBoard(this.board.value)
   }
 
 

@@ -59,5 +59,7 @@ export class BoardComponent implements OnInit {
 
   public resetBoard(){
     this.pagesService.setBoard(new BoardModel())
+    this.pagesService.setCurrentFrame(0)
+    this.pagesService.setPrevFrame(-1)
   }
 }
