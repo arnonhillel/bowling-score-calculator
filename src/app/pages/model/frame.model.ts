@@ -1,15 +1,15 @@
 export class FrameModel {
     private spare: boolean = false
     private strike: boolean = false
-    constructor(public first_hit: number,
-        public second_hit: number,
-        public total_frame_score: number,
-        public bonus_score: number,
-        public frame_number: number,
-        public maxPoints: number) {
+    public first_hit: number = 0 // -1?
+    public second_hit: number = 0 // -1?
+    // public total_frame_score: number = 0
+    public bonus_score: number = 0
+    public maxPoints: number = 10
+    constructor(public frame_number: number) {
     }
 
-    public setTotalScore(hit: string, number: number) {
+    public setTotalFrameScore(hit: string, number: number) {
         if('first_hit' == hit){
             this.first_hit = number
             if(this.first_hit == 10){// strike
@@ -22,7 +22,10 @@ export class FrameModel {
             }
         }
         
-        this.total_frame_score = this.first_hit + this.second_hit
+    }
+
+    getTotalFrameScore(){
+        return this.first_hit + this.second_hit + this.bonus_score
     }
 
     private setSpare(flag){
@@ -31,11 +34,16 @@ export class FrameModel {
     private setStrike(flag){
         this.strike = flag
     }
+
     public isSpare() {
+        return this.spare;
+    }
+    
+    public isStrike() {
         return this.strike
     }
 
-    public isStrike() {
-        return this.spare;
+    public setBonusScore(score: number){
+        this.bonus_score += score;
     }
 }

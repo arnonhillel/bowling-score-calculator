@@ -7,7 +7,7 @@ export class BoardModel {
     public totalScore: number = 0;
     constructor() {
         for (let i = 1; i < 11; i++) {
-            const frame = new FrameModel(-1, -1, 0, 0, i, 10)
+            const frame = new FrameModel(i)
             this.frames.push(frame)
         }
     }
@@ -19,10 +19,30 @@ export class BoardModel {
         this.hasStrike = flag;
     }
 
-    public setTotalScore() {
+
+    public setTotalBoardScore() {
         this.totalScore = 0
-        this.frames.forEach(element => {
-            this.totalScore += element.total_frame_score
-        })
+        for (let index = 0; index < this.frames.length; index++) {
+            const element = this.frames[index];
+            if(element.isSpare){
+                //save me the next first hit
+                this.getSpareBonus(index)
+            }
+    
+            if(element.isStrike){   
+                //save me the next two hits
+    
+            }
+            this.totalScore += element.getTotalFrameScore()
+            
+        }
     }
+
+
+    public getSpareBonus(index: number){
+
+    }
+
+
+
 }

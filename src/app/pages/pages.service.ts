@@ -13,7 +13,8 @@ export class PagesService {
   private board = new BehaviorSubject<BoardModel>(this.initialBoard);
   private currentFrame = new BehaviorSubject<number>(0);
   private prevFrame = new BehaviorSubject<number>(-1);
-
+  public firstHitBonus = 0
+  public firstHitAfterStrike = 0
   serviceUserName$ = this.userName.asObservable();
   serviceBoard$ = this.board.asObservable();
   serviceCurrentFrame$ = this.currentFrame.asObservable();
@@ -38,17 +39,15 @@ export class PagesService {
 
 
   public onHitChange(frameNumber: number, action: string, value) {
-    this.initialBoard.frames[frameNumber].setTotalScore(action , parseInt(value))
-    
-    this.initialBoard.frames[frameNumber].maxPoints -= parseInt(value)
-    // check spare and strike if yes update board
+    this.initialBoard.frames[frameNumber].setTotalFrameScore(action, parseInt(value))
 
+    this.initialBoard.frames[frameNumber].maxPoints -= parseInt(value)
     switch (action) {
       case 'first_hit':
-        this.afterFirstHit(frameNumber,value, this.initialBoard.frames[frameNumber].maxPoints);
+        this.afterFirstHit(frameNumber, value, this.initialBoard.frames[frameNumber].maxPoints);
         break;
       case 'second_hit':
-        this.afterSecondHit(frameNumber,value, this.initialBoard.frames[frameNumber].maxPoints);
+        this.afterSecondHit(frameNumber, value, this.initialBoard.frames[frameNumber].maxPoints);
         break;
       default:
         break;
@@ -58,31 +57,51 @@ export class PagesService {
   }
 
 
-  public afterFirstHit(frameNumber: number, value, maxPoints){
-    if(maxPoints <= 0){ // strike
-      
-      this.initialBoard.hasStrike = true;
-      this.setCurrentFrame(frameNumber+1)
+  public afterFirstHit(frameNumber: number, value, maxPoints) {
+    let prevFrame = this.initialBoard.frames[frameNumber - 1]
+    if (frameNumber > 0 && this.initialBoard.frames[frameNumber - 1].isSpare()) {
+      prevFrame.setBonusScore(value + this.firstHitBonus)
     }
-    
+    if (frameNumber > 0 && prevFrame.isStrike()) {
+      if(this.firstHitAfterStrike == 0){
+        this.firstHitBonus = value
+        this.firstHitAfterStrike = 1;
+      }else{
+        prevFrame.setBonusScore(value + this.firstHitBonus);
+        this.resetStrikeBonus()
+      }
+    }
+    if (maxPoints == 0) { // strike   
+      this.initialBoard.hasStrike = true;
+      this.setCurrentFrame(frameNumber + 1)
+    }
+
   }
 
-  public afterSecondHit(frameNumber: number, value, maxPoints){
-    if(maxPoints == 0){ //spare
-      this.initialBoard.hasSpare = false;
+
+  public afterSecondHit(frameNumber: number, value, maxPoints) {
+    if (frameNumber > 0 && this.initialBoard.frames[frameNumber - 1].isStrike()) {
+      this.initialBoard.frames[frameNumber - 1].setBonusScore(value + this.firstHitBonus)
+      this.resetStrikeBonus()
     }
-    this.setCurrentFrame(frameNumber+1)
+    if (maxPoints == 0) { //spare
+      this.initialBoard.hasSpare = true;
+    }
+    this.setCurrentFrame(frameNumber + 1)
+    this.setPrevFrame(frameNumber)
+    this.updateTotalScore()
   }
 
 
   public updateTotalScore() {
-    this.initialBoard.setTotalScore()
+    this.initialBoard.setTotalBoardScore()
     this.setBoard(this.initialBoard)
   }
 
-  
 
-  public grantBonus() {
 
+  public resetStrikeBonus() {
+    this.firstHitAfterStrike = 0;
+    this.firstHitBonus = 0;
   }
 }

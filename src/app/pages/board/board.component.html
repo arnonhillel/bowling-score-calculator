@@ -16,7 +16,7 @@
                     <form class="example-form" [ngClass]="{ highlight: currentFrame == i}">
                         <div class="first-hit">
                             <mat-label>---</mat-label>
-                            <mat-select (selectionChange)="onHitChange(i,'first_hit', $event.value)" [disabled]="currentFrame != i" *ngIf="!item.isSpare() && !item.isStrike()">
+                            <mat-select (selectionChange)="onHitChange(i,'first_hit', $event.value)" [disabled]="currentFrame != i" *ngIf="!item.isStrike()">
                                 <mat-option [value]="0">
                                     0
                                 </mat-option>
@@ -36,16 +36,16 @@
                                     {{i+1}}
                                 </mat-option>
                             </mat-select>
-                            <div *ngIf="item.isSpare()">
+                            <div *ngIf="item.isStrike()">
                                 X
                             </div>    
-                            <div *ngIf="item.isStrike()">
+                            <div *ngIf="item.isSpare()">
                                 /
                             </div>    
                         </div>
                         <div class="frame-total">
                             <span class="number">
-                                {{item.total_frame_score}}
+                                {{getTotalScore(i,item)}}
                             </span>
                         </div>
                     </form>
@@ -56,6 +56,10 @@
         <div class="total-scroe" style="">
          <h1 class="total-scroe-header">
              TOTAL SCORE:  {{board.totalScore}}
+             <br>
+             spare: {{board.hasSpare}}
+             <br>
+             strike: {{board.hasStrike}}
          </h1>
         </div>
     </div>
