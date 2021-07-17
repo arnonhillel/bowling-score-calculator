@@ -1,9 +1,8 @@
 export class FrameModel {
     private spare: boolean = false
     private strike: boolean = false
-    public first_hit: number = 0 // -1?
-    public second_hit: number = 0 // -1?
-    // public total_frame_score: number = 0
+    public first_hit: number = 0 
+    public second_hit: number = 0 
     public bonus_score: number = 0
     public maxPoints: number = 10
     constructor(public frame_number: number) {

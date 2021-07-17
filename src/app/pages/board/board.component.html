@@ -1,7 +1,7 @@
 <div class="container">
     <div class="input-container">
         <h1 class="header">
-            WELCOME: {{userName || 'Anonymous'}}
+            WELCOME: {{userName || 'Anonymous'}} 🎳
         </h1>
     </div>
     <div>
@@ -12,10 +12,10 @@
                 </tr>
             </thead>
             <tbody>
-                <td *ngFor="let item of board.frames; let i = index">
+                <td *ngFor="let item of board.frames; let i = index" style="   width: 10%;">
                     <form class="example-form" [ngClass]="{ highlight: currentFrame == i}">
                         <div class="first-hit">
-                            <mat-label>---</mat-label>
+                            <mat-label>___</mat-label>
                             <mat-select (selectionChange)="onHitChange(i,'first_hit', $event.value)" [disabled]="currentFrame != i" *ngIf="!item.isStrike()">
                                 <mat-option [value]="0">
                                     0
@@ -26,7 +26,7 @@
                             </mat-select>    
                         </div>
                         <div class="second-hit">
-                            <mat-label>---</mat-label>
+                            <mat-label>___</mat-label>
                             <mat-select (selectionChange)="onHitChange(i,'second_hit', $event.value)" [disabled]="item.first_hit < 0 || currentFrame != i" *ngIf="!item.isSpare() && !item.isStrike()">
                                 <mat-option [value]="0">
                                     0
